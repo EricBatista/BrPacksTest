@@ -13,7 +13,7 @@ public class ColheitadeiraModel extends AnimatedGeoModel<GeoTestEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(GeoTestEntity object) {
-        return new ResourceLocation(BrPacksTest.MOD_ID, "textures/item/colheitadeira.png");
+        return new ResourceLocation(BrPacksTest.MOD_ID, "textures/entity/colheitadeira.png");
     }
 
     @Override
