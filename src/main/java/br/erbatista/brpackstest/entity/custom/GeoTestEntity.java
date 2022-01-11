@@ -98,7 +98,14 @@ public class GeoTestEntity extends AnimalEntity implements IAnimatable
     public static AttributeModifierMap.MutableAttribute setCustomAttributes(){
         return MobEntity.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0D)
-                .add(Attributes.MOVEMENT_SPEED, 1D)
+                .add(Attributes.MOVEMENT_SPEED, 2.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0D);
     }
+
+    @Override
+    public boolean shouldRender(double pX, double pY, double pZ) {
+        return super.shouldRender(pX, pY, pZ);
+    }
+
+
 }

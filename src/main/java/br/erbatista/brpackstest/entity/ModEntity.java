@@ -17,7 +17,7 @@ public class ModEntity {
 
     public static final RegistryObject<EntityType<GeoTestEntity>> COLHEITADEIRA =ENTITY_TYPES.register(
             "colheitadeira", () -> EntityType.Builder.of(
-                    GeoTestEntity::new, EntityClassification.MISC).sized(2f,2f).build("colheitadeira")
+                    GeoTestEntity::new, EntityClassification.MISC).sized(2.5f,2f).build("colheitadeira")
     );
 
     public static void register(IEventBus eventBus) {

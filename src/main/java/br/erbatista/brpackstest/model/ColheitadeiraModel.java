@@ -20,4 +20,5 @@ public class ColheitadeiraModel extends AnimatedGeoModel<GeoTestEntity> {
     public ResourceLocation getAnimationFileLocation(GeoTestEntity animatable) {
         return null;
     }
+
 }
