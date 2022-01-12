@@ -4,10 +4,20 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.monster.piglin.PiglinTasks;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.inventory.container.ChestContainer;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -18,8 +28,10 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
-public class ColheitadeiraEntity extends AnimalEntity implements IAnimatable
+public class ColheitadeiraEntity extends AnimalEntity implements IAnimatable, IInventory, INamedContainerProvider
 {
+    private NonNullList<ItemStack> itemStacks = NonNullList.withSize(36, ItemStack.EMPTY);
+    private boolean dropEquipment = true;
     private AnimationFactory factory = new AnimationFactory(this);
 
     public ColheitadeiraEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
@@ -97,8 +109,91 @@ public class ColheitadeiraEntity extends AnimalEntity implements IAnimatable
     }
 
     @Override
-    public boolean shouldRender(double pX, double pY, double pZ) {
-        return super.shouldRender(pX, pY, pZ);
+    public int getContainerSize() {
+        return 27;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        for(ItemStack itemstack : this.itemStacks) {
+            if (!itemstack.isEmpty()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public ItemStack getItem(int pIndex) {
+        return this.itemStacks.get(pIndex);
+    }
+
+    @Override
+    public ItemStack removeItem(int pIndex, int pCount) {
+        return ItemStackHelper.removeItem(this.itemStacks, pIndex, pCount);
+    }
+
+    @Override
+    public ItemStack removeItemNoUpdate(int pIndex) {
+        ItemStack itemstack = this.itemStacks.get(pIndex);
+        if (itemstack.isEmpty()) {
+            return ItemStack.EMPTY;
+        } else {
+            this.itemStacks.set(pIndex, ItemStack.EMPTY);
+            return itemstack;
+        }
+    }
+
+    @Override
+    public void setItem(int pIndex, ItemStack pStack) {
+        this.itemStacks.set(pIndex, pStack);
+        if (!pStack.isEmpty() && pStack.getCount() > this.getMaxStackSize()) {
+            pStack.setCount(this.getMaxStackSize());
+        }
+    }
+
+    @Override
+    public void setChanged() {
+
+    }
+
+    @Override
+    public boolean stillValid(PlayerEntity pPlayer) {
+        if (this.removed) {
+            return false;
+        } else {
+            return !(pPlayer.distanceToSqr(this) > 64.0D);
+        }
+    }
+
+    @Override
+    public void clearContent() {
+        this.itemStacks.clear();
+    }
+
+    @Nullable
+    @Override
+    public Container createMenu(int p_createMenu_1_, PlayerInventory p_createMenu_2_, PlayerEntity p_createMenu_3_) {
+
+        return this.createMenu(p_createMenu_1_, p_createMenu_2_);
+
+    }
+
+    public Container createMenu(int pId, PlayerInventory pPlayerInventory) {
+        return ChestContainer.threeRows(pId, pPlayerInventory, this);
+    }
+
+    @Override
+    public ActionResultType interactAt(PlayerEntity pPlayer, Vector3d pVec, Hand pHand) {
+        ActionResultType ret = super.interact(pPlayer, pHand);
+        if (ret.consumesAction()) return ret;
+        pPlayer.openMenu(this);
+        if (!pPlayer.level.isClientSide) {
+            return ActionResultType.CONSUME;
+        } else {
+            return ActionResultType.SUCCESS;
+        }
     }
 
 
