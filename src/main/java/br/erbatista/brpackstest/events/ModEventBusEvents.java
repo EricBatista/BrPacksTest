@@ -1,8 +1,8 @@
 package br.erbatista.brpackstest.events;
 
 import br.erbatista.brpackstest.BrPacksTest;
-import br.erbatista.brpackstest.entity.ModEntity;
-import br.erbatista.brpackstest.entity.custom.GeoTestEntity;
+import br.erbatista.brpackstest.entity.ModEntityRegister;
+import br.erbatista.brpackstest.entity.custom.ColheitadeiraEntity;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -12,6 +12,6 @@ public class ModEventBusEvents {
 
     @SubscribeEvent
     public static void addEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(ModEntity.COLHEITADEIRA.get(), GeoTestEntity.setCustomAttributes().build());
+        event.put(ModEntityRegister.COLHEITADEIRA.get(), ColheitadeiraEntity.setCustomAttributes().build());
     }
 }

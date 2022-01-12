@@ -1,8 +1,7 @@
 package br.erbatista.brpackstest;
 
-import br.erbatista.brpackstest.entity.ModEntity;
-import br.erbatista.brpackstest.entity.custom.GeoTestEntity;
-import br.erbatista.brpackstest.render.GeoExampleRenderer;
+import br.erbatista.brpackstest.entity.ModEntityRegister;
+import br.erbatista.brpackstest.render.ColheitadeiraRender;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -16,7 +15,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import software.bernie.example.registry.EntityRegistry;
 import software.bernie.geckolib3.GeckoLib;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -33,7 +31,7 @@ public class BrPacksTest
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        ModEntity.register(modEventBus);
+        ModEntityRegister.register(modEventBus);
 
         modEventBus.addListener(this::setup);
 
@@ -62,7 +60,7 @@ public class BrPacksTest
     @SubscribeEvent
     public void registerRenderers(final FMLClientSetupEvent event)
     {
-        RenderingRegistry.registerEntityRenderingHandler(ModEntity.COLHEITADEIRA.get(),
-                manager -> new GeoExampleRenderer(manager));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntityRegister.COLHEITADEIRA.get(),
+                manager -> new ColheitadeiraRender(manager));
     }
 }

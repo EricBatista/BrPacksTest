@@ -2,10 +2,8 @@ package br.erbatista.brpackstest.entity.custom;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierManager;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResultType;
@@ -15,20 +13,16 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
-public class GeoTestEntity extends AnimalEntity implements IAnimatable
+public class ColheitadeiraEntity extends AnimalEntity implements IAnimatable
 {
     private AnimationFactory factory = new AnimationFactory(this);
 
-    public GeoTestEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
+    public ColheitadeiraEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
         super(type, worldIn);
         this.noCulling = true;
     }
