@@ -4,7 +4,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.monster.piglin.PiglinTasks;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -14,12 +13,10 @@ import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.*;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -31,7 +28,6 @@ import javax.annotation.Nullable;
 public class ColheitadeiraEntity extends AnimalEntity implements IAnimatable, IInventory, INamedContainerProvider
 {
     private NonNullList<ItemStack> itemStacks = NonNullList.withSize(36, ItemStack.EMPTY);
-    private boolean dropEquipment = true;
     private AnimationFactory factory = new AnimationFactory(this);
 
     public ColheitadeiraEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
@@ -50,6 +46,7 @@ public class ColheitadeiraEntity extends AnimalEntity implements IAnimatable, II
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState blockIn) {
+        this.playSound(SoundEvents.HOGLIN_STEP, 0.20F, 0.5F);
     }
 
     @Override
@@ -193,6 +190,28 @@ public class ColheitadeiraEntity extends AnimalEntity implements IAnimatable, II
             return ActionResultType.CONSUME;
         } else {
             return ActionResultType.SUCCESS;
+        }
+    }
+
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(this.level.isClientSide()){
+            if(getControllingPassenger() == null) return;
+
+            Vector3f smokePos = new Vector3f(-5f,4.5f,-1f);
+            double ang = ((this.getControllingPassenger().getYHeadRot()+90)*Math.PI)/180*(-1);
+
+            double xResult = smokePos.x()*Math.cos(ang)+smokePos.z()*Math.sin(ang);
+            double yResult = smokePos.y();
+            double zResult = smokePos.z()*Math.cos(ang)-smokePos.x()*Math.sin(ang);
+
+            this.level.addParticle(
+                    ParticleTypes.SMOKE,getX() + xResult,getY() + yResult,getZ() + zResult,
+                    0 ,0,0);
+
+
         }
     }
 
