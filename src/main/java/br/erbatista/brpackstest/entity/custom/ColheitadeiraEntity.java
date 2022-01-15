@@ -27,6 +27,9 @@ import javax.annotation.Nullable;
 
 public class ColheitadeiraEntity extends AnimalEntity implements IAnimatable, IInventory, INamedContainerProvider
 {
+    //Posicao da particula de fumaca em relacao ao modelo
+    public static final Vector3f SMOKE_POS = new Vector3f(-5f, 4.5f, -1f);
+    //inventario da colheitadeira
     private NonNullList<ItemStack> itemStacks = NonNullList.withSize(36, ItemStack.EMPTY);
     private AnimationFactory factory = new AnimationFactory(this);
 
@@ -44,11 +47,7 @@ public class ColheitadeiraEntity extends AnimalEntity implements IAnimatable, II
         return super.mobInteract(player, hand);
     }
 
-    @Override
-    protected void playStepSound(BlockPos pos, BlockState blockIn) {
-        this.playSound(SoundEvents.HOGLIN_STEP, 0.20F, 0.5F);
-    }
-
+    //Locomocao do mob
     @Override
     public void travel(Vector3d pos) {
         if (this.isAlive()) {
@@ -100,10 +99,11 @@ public class ColheitadeiraEntity extends AnimalEntity implements IAnimatable, II
 
     public static AttributeModifierMap.MutableAttribute setCustomAttributes(){
         return MobEntity.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 20.0D)
+                .add(Attributes.MAX_HEALTH, 1.0D)
                 .add(Attributes.MOVEMENT_SPEED, 2.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0D);
     }
+    //Manipulacao de inventario
 
     @Override
     public int getContainerSize() {
@@ -120,6 +120,7 @@ public class ColheitadeiraEntity extends AnimalEntity implements IAnimatable, II
 
         return true;
     }
+
 
     @Override
     public ItemStack getItem(int pIndex) {
@@ -169,23 +170,21 @@ public class ColheitadeiraEntity extends AnimalEntity implements IAnimatable, II
         this.itemStacks.clear();
     }
 
+    //Criar interface grafica do inventario
     @Nullable
     @Override
     public Container createMenu(int p_createMenu_1_, PlayerInventory p_createMenu_2_, PlayerEntity p_createMenu_3_) {
 
-        return this.createMenu(p_createMenu_1_, p_createMenu_2_);
+        return ChestContainer.threeRows(p_createMenu_1_, p_createMenu_2_,this);
 
     }
 
-    public Container createMenu(int pId, PlayerInventory pPlayerInventory) {
-        return ChestContainer.threeRows(pId, pPlayerInventory, this);
-    }
-
+    //Abrir inventario ao clicar com o shift botao direito
     @Override
     public ActionResultType interactAt(PlayerEntity pPlayer, Vector3d pVec, Hand pHand) {
         ActionResultType ret = super.interact(pPlayer, pHand);
         if (ret.consumesAction()) return ret;
-        pPlayer.openMenu(this);
+        if(pPlayer.isShiftKeyDown()) pPlayer.openMenu(this);
         if (!pPlayer.level.isClientSide) {
             return ActionResultType.CONSUME;
         } else {
@@ -193,19 +192,17 @@ public class ColheitadeiraEntity extends AnimalEntity implements IAnimatable, II
         }
     }
 
-
+    //Codigo responsavel pelas particulas
     @Override
     public void tick() {
         super.tick();
         if(this.level.isClientSide()){
             if(getControllingPassenger() == null) return;
-
-            Vector3f smokePos = new Vector3f(-5f,4.5f,-1f);
             double ang = ((this.getControllingPassenger().getYHeadRot()+90)*Math.PI)/180*(-1);
 
-            double xResult = smokePos.x()*Math.cos(ang)+smokePos.z()*Math.sin(ang);
-            double yResult = smokePos.y();
-            double zResult = smokePos.z()*Math.cos(ang)-smokePos.x()*Math.sin(ang);
+            double xResult = SMOKE_POS.x()*Math.cos(ang)+ SMOKE_POS.z()*Math.sin(ang);
+            double yResult = SMOKE_POS.y();
+            double zResult = SMOKE_POS.z()*Math.cos(ang)- SMOKE_POS.x()*Math.sin(ang);
 
             this.level.addParticle(
                     ParticleTypes.SMOKE,getX() + xResult,getY() + yResult,getZ() + zResult,
@@ -213,6 +210,11 @@ public class ColheitadeiraEntity extends AnimalEntity implements IAnimatable, II
 
 
         }
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState blockIn) {
+        this.playSound(SoundEvents.HOGLIN_STEP, 0.20F, 0.5F);
     }
 
 

@@ -1,3 +1,4 @@
 {
-  "entity.brpackstest.colheitadeira": "Harvester"
+  "entity.brpackstest.colheitadeira": "Harvester",
+  "item.brpackstest.colheitadeira_spawn": "Spawn Harvester"
 }

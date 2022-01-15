@@ -1,6 +1,7 @@
 package br.erbatista.brpackstest;
 
 import br.erbatista.brpackstest.entity.ModEntityRegister;
+import br.erbatista.brpackstest.item.ModItems;
 import br.erbatista.brpackstest.render.ColheitadeiraRender;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
@@ -32,6 +33,7 @@ public class BrPacksTest
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModEntityRegister.register(modEventBus);
+        ModItems.register(modEventBus);
 
         modEventBus.addListener(this::setup);
 

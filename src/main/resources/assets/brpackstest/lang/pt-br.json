@@ -1,3 +1,4 @@
 {
-  "entity.brpackstest.colheitadeira": "Colheitadeira"
+  "entity.brpackstest.colheitadeira": "Colheitadeira",
+  "item.brpackstest.colheitadeira_spawn": "Invocar Colheitadeira"
 }
